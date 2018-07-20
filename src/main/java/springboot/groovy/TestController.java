@@ -1,9 +1,12 @@
 package springboot.groovy;
 
+import java.io.IOException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
+import org.springframework.context.ApplicationContext;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -19,6 +22,14 @@ public class TestController {
 
 	@GetMapping("/test")
 	public Object test() {
+		long start = System.currentTimeMillis();
+		ApplicationContext applicationContext = applicationContextUtil.getApplicationContext();
+		try {
+			Hello clz1 = (Hello) applicationContext.getBean("hello");
+			System.out.println();
+		}catch(Exception e) {
+			
+		}
 		String scriptContent = "import org.springframework.beans.factory.annotation.Autowired\r\n" + 
 				"import springboot.groovy.service.Hello\r\n" + 
 				"import springboot.groovy.service.HelloService\r\n" + 
@@ -36,14 +47,22 @@ public class TestController {
 				"        print(service.hello())\r\n" + 
 				"    }\r\n" + 
 				"}";
-		Class<?> clazz = new GroovyClassLoader().parseClass(scriptContent);
-		BeanDefinitionBuilder beanDefinitionBuilder = BeanDefinitionBuilder.genericBeanDefinition(clazz);
-		BeanDefinition beanDefinition = beanDefinitionBuilder.getRawBeanDefinition();
-		applicationContextUtil.getApplicationContext().getAutowireCapableBeanFactory().applyBeanPostProcessorsAfterInitialization(beanDefinition, "hello");
-		DefaultListableBeanFactory beanFactory = (DefaultListableBeanFactory)applicationContextUtil.getApplicationContext().getAutowireCapableBeanFactory();
+		GroovyClassLoader groovyClassLoader = new GroovyClassLoader();
+		Class<?> clazz = groovyClassLoader.parseClass(scriptContent);
+		System.err.println(clazz.getName());
+		try {
+			groovyClassLoader.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		BeanDefinition beanDefinition = BeanDefinitionBuilder.genericBeanDefinition(clazz).getRawBeanDefinition();
+		applicationContext.getAutowireCapableBeanFactory().applyBeanPostProcessorsAfterInitialization(beanDefinition, "hello");
+		DefaultListableBeanFactory beanFactory = (DefaultListableBeanFactory)applicationContext.getAutowireCapableBeanFactory();
 
 		beanFactory.registerBeanDefinition("hello", beanDefinition);
-		Hello clz = (Hello) applicationContextUtil.getApplicationContext().getBean("hello");
-		return clz.run();
+		Hello clz = (Hello) applicationContext.getBean("hello");
+		clz.run();
+		long end = System.currentTimeMillis();
+		return end-start;
 	}
 }
