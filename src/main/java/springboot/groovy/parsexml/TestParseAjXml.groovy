@@ -44,7 +44,7 @@ class TestParseAjXml {
 		MarkupBuilder mb  = new groovy.xml.MarkupBuilder(strXml);
 
 		mb.'?xml'(version:"1.0", encoding:"UTF-8")
-		mb.interview{
+		mb.interview(root:"根目录"){
 			data{
 				person(id:"05891", comments:"social recruitment"){
 					title{
@@ -77,7 +77,7 @@ class TestParseAjXml {
 			}
 		}
 
-		print strXml
+		print strXml.toString()
 
 //		def xmlFile = "output.xml"
 //		PrintWriter pw = new PrintWriter(xmlFile)
