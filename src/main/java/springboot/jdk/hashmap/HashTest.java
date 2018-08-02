@@ -1,8 +1,9 @@
 package springboot.jdk.hashmap;
 
 /**
- * 
- * 
+ * HashMap容量为2次幂的原因：
+ * int index = (n - 1) & hash
+ * 下标利用拉链法解决碰撞冲突，可以实现一个均匀分布，空间利用率高，如果不采用2次幂会造成部分浪费
  *
  */
 public class HashTest {
