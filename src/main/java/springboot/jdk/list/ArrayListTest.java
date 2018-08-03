@@ -1,5 +1,8 @@
 package springboot.jdk.list;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * 
  * 为什么数组长度的最大值是(Integer.MAX_VALUE - 8),
@@ -13,6 +16,13 @@ public class ArrayListTest {
 	private static int i;
 	public static void main(String[] args) {
 		System.out.println(i);
+		List<String> list = new ArrayList<>(4);
+		for(int i = 0; i < 10; i++) {
+			list.add("1");
+		}
+		list.forEach((str)->{
+			System.out.println(str);
+		});
 	}
 
 }
