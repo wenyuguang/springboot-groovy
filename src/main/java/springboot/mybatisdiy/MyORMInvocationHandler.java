@@ -41,7 +41,7 @@ public class MyORMInvocationHandler implements InvocationHandler {
 		List<String> selectParameterNames = SQLUtil.getSelectParameterNames(selectSQL);
 		List<Object> sqlParams = new ArrayList<>();
 		for (String parameterName : selectParameterNames) {
-			Object parameterValue = acturlParamsMap.get(parameterName);
+			Object parameterValue = acturlParamsMap.get(parameterName.trim());
 			sqlParams.add(parameterValue);
 		}
 		// 将sql语句参数替换成?
@@ -94,7 +94,7 @@ public class MyORMInvocationHandler implements InvocationHandler {
 	private List<Object> getSqlParamValue(String[] sqlInsertParameter, ConcurrentHashMap<Object, Object> paramsMap) {
 		List<Object> sqlParams = new ArrayList<>();
 		for (String paramName : sqlInsertParameter) {
-			Object paramValue = paramsMap.get(paramName);
+			Object paramValue = paramsMap.get(paramName.trim());
 			sqlParams.add(paramValue);
 		}
 		return sqlParams;

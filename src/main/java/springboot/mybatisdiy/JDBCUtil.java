@@ -39,7 +39,7 @@ public final class JDBCUtil {
 		/*
 		 * 获取URL
 		 */
-		URL = "jdbc:mysql://localhost:3306/test?useUnicode=true&characterEncoding=utf8";
+		URL = "jdbc:mysql://localhost:3306/test?useUnicode=true&characterEncoding=utf8&useSSL=false";
 		/*
 		 * 获取用户名
 		 */

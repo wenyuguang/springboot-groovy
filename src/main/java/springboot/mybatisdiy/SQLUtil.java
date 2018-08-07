@@ -39,7 +39,7 @@ public class SQLUtil {
 	 */
 	public static String questionMark(String sql, String[] parameterName) {
 		for (int i = 0; i < parameterName.length; i++) {
-			String string = parameterName[i];
+			String string = parameterName[i].trim();
 			sql = sql.replace("#{" + string + "}", "?");
 		}
 		return sql;
