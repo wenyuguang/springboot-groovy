@@ -1,6 +1,8 @@
 package springboot.designpattern.responsibilityPattern;
 
-public class AbstractHandler {
+public abstract class AbstractHandler implements Handler {
+	
+	public String name;
 	
 	private Handler handler;
 

@@ -1,16 +1,14 @@
 package springboot.designpattern.responsibilityPattern;
 
-public class MyHandler extends AbstractHandler implements Handler {
+public class SecondHandler extends AbstractHandler{
 	
-	private String name;
-
-	public MyHandler(String name) {
+	public SecondHandler(String name) {
 		this.name = name;
 	}
 
 	@Override
 	public void operator() {
-		System.out.println(name + "handed!");
+		System.out.println(name + "  第二个handler");
 		if (getHandler() != null) {
 			getHandler().operator();
 		}
