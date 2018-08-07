@@ -8,6 +8,8 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.DefaultTransactionDefinition;
+import org.springframework.transaction.support.TransactionCallbackWithoutResult;
+import org.springframework.transaction.support.TransactionTemplate;
 
 /**
  * 
@@ -21,8 +23,34 @@ import org.springframework.transaction.support.DefaultTransactionDefinition;
  */
 public class SpringTx {
 
+	ApplicationContext applicationContext = SpringContextUtil.getApplicationContext();
+	
+	/** 声明式（XML配置）
+	 * <tx:advice id="txAdvice" transaction-manager="txManager"> 
+         <tx:attributes>  <!--设置所有匹配的方法，然后设置传播级别和事务隔离-->
+           <tx:method name="save*" propagation="REQUIRED" /> 
+           <tx:method name="add*" propagation="REQUIRED" /> 
+           <tx:method name="create*" propagation="REQUIRED" /> 
+           <tx:method name="insert*" propagation="REQUIRED" /> 
+           <tx:method name="update*" propagation="REQUIRED" /> 
+           <tx:method name="merge*" propagation="REQUIRED" /> 
+           <tx:method name="del*" propagation="REQUIRED" /> 
+           <tx:method name="remove*" propagation="REQUIRED" /> 
+           <tx:method name="put*" propagation="REQUIRED" /> 
+           <tx:method name="get*" propagation="SUPPORTS" read-only="true" /> 
+           <tx:method name="count*" propagation="SUPPORTS" read-only="true" /> 
+           <tx:method name="find*" propagation="SUPPORTS" read-only="true" /> 
+           <tx:method name="list*" propagation="SUPPORTS" read-only="true" /> 
+           <tx:method name="*" propagation="SUPPORTS" read-only="true" /> 
+         </tx:attributes> 
+       </tx:advice> 
+       <aop:config> 
+         <aop:pointcut id="txPointcut" expression="execution(* org.transaction..service.*.*(..))" /> 
+         <aop:advisor advice-ref="txAdvice" pointcut-ref="txPointcut" /> 
+       </aop:config>
+	 */
 	public void transactionManualTest() {
-		ApplicationContext applicationContext = SpringContextUtil.getApplicationContext();
+		
 		DefaultTransactionDefinition definition = new DefaultTransactionDefinition();
 		//设置事务传播行为
         definition.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRES_NEW);
@@ -38,6 +66,22 @@ public class SpringTx {
 			transactionManager.rollback(transactionStatus);
 		}
 	}
+	
+	/**
+	 * 事物模板方式
+	 */
+	public void testTransactionTemplate() {
+		DataSourceTransactionManager transactionManager = (DataSourceTransactionManager) applicationContext.getBean("transactionManager");
+		  TransactionTemplate transactionTemplate = new TransactionTemplate(transactionManager); 
+		  transactionTemplate.setIsolationLevel(TransactionDefinition.ISOLATION_READ_COMMITTED); //设置事务隔离级别
+		  transactionTemplate.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRED);//设置为required传播级别
+		  transactionTemplate.execute(new TransactionCallbackWithoutResult() { 
+		      @Override 
+		      protected void doInTransactionWithoutResult(TransactionStatus status) {  //事务块
+//		         jdbcTemplate.update(INSERT_SQL, "test"); 
+		  }}); 
+		  
+		}
 	
 	@Transactional(propagation = Propagation.REQUIRES_NEW, isolation = Isolation.DEFAULT, 
 			timeout = 60, readOnly = false, rollbackFor = {RuntimeException.class, Exception.class},
