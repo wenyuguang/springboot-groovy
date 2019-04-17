@@ -1,0 +1,21 @@
+﻿  des.cpp
+c:\users\wenyu\eclipse-workspace\springboot-groovy\cpluspluscode\jnitest\jnitest\des.cpp(70): error C4996: 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.17763.0\ucrt\string.h(338): note: 参见“strncpy”的声明
+c:\users\wenyu\eclipse-workspace\springboot-groovy\cpluspluscode\jnitest\jnitest\des.cpp(71): error C4996: 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.17763.0\ucrt\string.h(338): note: 参见“strncpy”的声明
+c:\users\wenyu\eclipse-workspace\springboot-groovy\cpluspluscode\jnitest\jnitest\des.cpp(113): error C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.17763.0\ucrt\string.h(133): note: 参见“strcpy”的声明
+c:\users\wenyu\eclipse-workspace\springboot-groovy\cpluspluscode\jnitest\jnitest\des.cpp(117): error C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.17763.0\ucrt\string.h(133): note: 参见“strcpy”的声明
+c:\users\wenyu\eclipse-workspace\springboot-groovy\cpluspluscode\jnitest\jnitest\des.cpp(127): error C2440: “初始化”: 无法从“const char [65]”转换为“char *”
+  c:\users\wenyu\eclipse-workspace\springboot-groovy\cpluspluscode\jnitest\jnitest\des.cpp(127): note: 从字符串文本转换将丢失 const 限定符(请参阅 /Zc:strictStrings)
+c:\users\wenyu\eclipse-workspace\springboot-groovy\cpluspluscode\jnitest\jnitest\des.cpp(128): error C2440: “初始化”: 无法从“const char [65]”转换为“char *”
+  c:\users\wenyu\eclipse-workspace\springboot-groovy\cpluspluscode\jnitest\jnitest\des.cpp(128): note: 从字符串文本转换将丢失 const 限定符(请参阅 /Zc:strictStrings)
+c:\users\wenyu\eclipse-workspace\springboot-groovy\cpluspluscode\jnitest\jnitest\des.cpp(135): error C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.17763.0\ucrt\string.h(133): note: 参见“strcpy”的声明
+c:\users\wenyu\eclipse-workspace\springboot-groovy\cpluspluscode\jnitest\jnitest\des.cpp(136): error C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.17763.0\ucrt\string.h(133): note: 参见“strcpy”的声明
+c:\users\wenyu\eclipse-workspace\springboot-groovy\cpluspluscode\jnitest\jnitest\des.cpp(143): error C4996: 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.17763.0\ucrt\string.h(338): note: 参见“strncpy”的声明
+c:\users\wenyu\eclipse-workspace\springboot-groovy\cpluspluscode\jnitest\jnitest\des.cpp(144): error C4996: 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.17763.0\ucrt\string.h(338): note: 参见“strncpy”的声明
