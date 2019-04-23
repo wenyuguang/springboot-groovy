@@ -35,17 +35,27 @@ public class ProtocolEncoder extends MessageToByteEncoder<byte[]>{
 
 	@Override
 	protected void encode(ChannelHandlerContext ctx, byte[] msg, ByteBuf out) throws Exception {
-		String str = "zhe shi yi ge ceshi.这是一个测试";
+		String str = "   zhe shi yi ge ceshi.这是一个测试";
 		byte[] b = str.getBytes();
 		System.err.println("str 长度：" + b.length);
 		out
-		.writeShort(0xbabe)
-		.writeByte(BeansproutProtocolHeader.REQUEST)
-        .writeByte(0x00)
-        .writeLong(123)
-        .writeInt(b.length)
-        .writeBytes(b);
+		.writeShort(0xbabe);
+//		.writeByte(0x0f)
+//        .writeByte(0x02)
+//        .writeLong(0x01)
+//        .writeInt(b.length)
+//        .writeBytes(b);
 		
 	}
 
+	/**
+	* 切换大小端续
+	*/
+	private byte[] changeSizeEndBytes(byte[] a){
+	    byte[] b = new byte[a.length];
+	    for (int i = 0; i < b.length; i++) {
+	        b[i] = a[b.length - i - 1];
+	    }
+	    return b;
+	}
 }

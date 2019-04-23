@@ -1,6 +1,5 @@
 package springboot.groovy.cplusplus;
 
-import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
@@ -17,13 +16,13 @@ public class CplusplusHandler extends ChannelInboundHandlerAdapter {
 		System.out.print("来了");
         System.out.println("server channelRead.." + msg);
         System.out.println(ctx.channel().remoteAddress() + "->Server :" + msg.toString());
-//        ctx.writeAndFlush(msg);
+        ctx.writeAndFlush(changeSizeEndBytes(msg.toString().getBytes()));
         
-        byte[] bt = new byte[16];
-        for(int i = 0; i < 16; i ++) {
-        	bt[i] = (byte) i;
-        }
-        ctx.writeAndFlush(bt);
+//        byte[] bt = new byte[16];
+//        for(int i = 0; i < 16; i ++) {
+//        	bt[i] = (byte) i;
+//        }
+//        ctx.writeAndFlush(msg);
 	}
 	@Override
 	public void channelReadComplete(ChannelHandlerContext ctx) throws Exception {
@@ -49,5 +48,15 @@ public class CplusplusHandler extends ChannelInboundHandlerAdapter {
         } else {
             super.userEventTriggered(ctx, evt);
         }
+	}
+	/**
+	* 切换大小端续
+	*/
+	private byte[] changeSizeEndBytes(byte[] a){
+	    byte[] b = new byte[a.length];
+	    for (int i = 0; i < b.length; i++) {
+	        b[i] = a[b.length - i - 1];
+	    }
+	    return b;
 	}
 }
