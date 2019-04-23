@@ -33,55 +33,35 @@ SimpleTcpSocketClientDemo::SimpleTcpSocketClientDemo()
 void SimpleTcpSocketClientDemo::readyRead()
 {
     QByteArray qb = m_pTcpSocket->readAll();
-//    QByteArray qb1 = m_pTcpSocket->read(2);
-    short sst;
-    unsigned char B[20];
-
-    memcpy( B, qb.data(), 2);
-
-    qDebug() << B;
-//    int s = qb1.data();
-//    cout << qb1.data() << endl;
-    char s = qb.data()[0];
-    short st = qb.toShort();
-    qDebug() << "short is :" << QByteArray::number(st, 16);
-    qDebug() << "s is ::::" << QByteArray::number(s, 16);
-
-    s = qb.data()[1];
-    qDebug() << "s is ::::" << QByteArray::number(s, 16);
-    s = qb.data()[2];
-    qDebug() << "s is ::::" << QByteArray::number(s, 16);
-    s = qb.data()[3];
-    qDebug() << "s is ::::" << QByteArray::number(s, 16);
-    s = qb.data()[4];
-    qDebug() << "s is ::::" << QByteArray::number(s, 16);
-    s = qb.data()[5];
-    qDebug() << "s is ::::" << QByteArray::number(s, 16);
-    s = qb.data()[6];
-    qDebug() << "s is ::::" << QByteArray::number(s, 16);
-    s = qb.data()[7];
-    qDebug() << "s is ::::" << QByteArray::number(s, 16);
-    s = qb.data()[8];
-    qDebug() << "s is ::::" << QByteArray::number(s, 16);
-    s = qb.data()[9];
-    qDebug() << "s is ::::" << QByteArray::number(s, 16);
-    s = qb.data()[10];
-    qDebug() << "s is ::::" << QByteArray::number(s, 16);
-    s = qb.data()[11];
-    qDebug() << "s is ::::" << QByteArray::number(s, 16);
-    s = qb.data()[12];
-    qDebug() << "s is ::::" << QByteArray::number(s, 16);
-    s = qb.data()[13];
-    qDebug() << "s is ::::" << QByteArray::number(s, 16);
-    s = qb.data()[14];
-    qDebug() << "s is ::::" << QByteArray::number(s, 16);
-    s = qb.data()[15];
-    qDebug() << "s is ::::" << QByteArray::number(s, 16);
-
+//    QByteArray qb = m_pTcpSocket->read(2);
+//    qDebug() << qb.toHex();
+//    qb = m_pTcpSocket->read(1);
+//    qDebug() << qb.toHex();
+//    qb = m_pTcpSocket->read(1);
+//    qDebug() << qb.toHex();
+//    qb = m_pTcpSocket->read(8);
+//    qDebug() << qb.toHex();
+//    qb = m_pTcpSocket->read(4);
+//    qDebug() << qb.toHex();
+//    qb = m_pTcpSocket->readAll();
+    qDebug() << qb.data();
 
     qDebug() << "size:    " <<qb.size() - 16;
 
-    qDebug() << "received:    " <<qb;
+    int length = 2;
+    size_t t = sizeof (length);
+
+    QByteArray hex = qb.mid(0, 2);
+    qDebug() << hex.toHex();
+    hex = qb.mid(2, 1);
+    qDebug() << hex.toHex();
+    hex = qb.mid(3, 1);
+    qDebug() << hex.toHex();
+    hex = qb.mid(4, 8);
+    qDebug() << hex.toHex();
+    hex = qb.mid(12, 4);
+    qDebug() << hex.toHex();
+    qDebug() << "received:    " <<qb.toHex();
 
     QString str(qb.data());
     qDebug() << "SimpleTcpSocketClientDemo::readyRead " << str.toStdString().c_str();
