@@ -5,7 +5,8 @@
 #include <QTime>
 #include <iostream>
 #include <stdio.h>
-#include<bitset>
+#include <bitset>
+#include <string.h>
 
 using namespace std;
 
@@ -21,48 +22,66 @@ SimpleTcpSocketClientDemo::SimpleTcpSocketClientDemo()
     //3. 与服务器端建立连接
     m_pTcpSocket->connectToHost("127.0.0.1", 8080);
 
-    char data[] = "hello , im received your msg. and we are connected. 测试中文？？？";
+    char data[] = "   hello , im received your msg. and we are connected. 测试中文？？？";
     QByteArray array = QByteArray(data, strlen(data));
     m_pTcpSocket->write(array);
     //4. 同步处理-等待数据可读
-//    sendData();
+    sendData();
     m_pTcpSocket->waitForReadyRead();
 }
 
 void SimpleTcpSocketClientDemo::readyRead()
 {
     QByteArray qb = m_pTcpSocket->readAll();
+//    QByteArray qb1 = m_pTcpSocket->read(2);
+    short sst;
+    unsigned char B[20];
 
-    /*
-     *  QByteArray ba("Hello");
-        int n = ba.size();          // n == 5
-        ba.data()[0];               // returns 'H'
-        ba.data()[4];               // returns 'o'
-        ba.data()[5];               // returns '\0'
-        See also isEmpty() and resize().
+    memcpy( B, qb.data(), 2);
 
-        QList<QByteArray> QByteArray::s
-    short magic = qb.data()[2];
-    char sign = qb.data()[1];
-    char status = qb.data()[1];
-    char id = qb.data()[8];
-    char bodyLength = qb.data()[4];
-     */
-    short magic = qb.data()[2];
-    char sign = qb.data()[1];
-    char status = qb.data()[1];
-    char id = qb.data()[8];
-    char bodyLength = qb.data()[4];
+    qDebug() << B;
+//    int s = qb1.data();
+//    cout << qb1.data() << endl;
+    char s = qb.data()[0];
+    short st = qb.toShort();
+    qDebug() << "short is :" << QByteArray::number(st, 16);
+    qDebug() << "s is ::::" << QByteArray::number(s, 16);
 
-    bitset<32> bs(magic);
-    cout << bs << endl;
-    cout << sign << endl;
-    cout << status << endl;
-    cout << id << endl;
-    cout << bodyLength << endl;
+    s = qb.data()[1];
+    qDebug() << "s is ::::" << QByteArray::number(s, 16);
+    s = qb.data()[2];
+    qDebug() << "s is ::::" << QByteArray::number(s, 16);
+    s = qb.data()[3];
+    qDebug() << "s is ::::" << QByteArray::number(s, 16);
+    s = qb.data()[4];
+    qDebug() << "s is ::::" << QByteArray::number(s, 16);
+    s = qb.data()[5];
+    qDebug() << "s is ::::" << QByteArray::number(s, 16);
+    s = qb.data()[6];
+    qDebug() << "s is ::::" << QByteArray::number(s, 16);
+    s = qb.data()[7];
+    qDebug() << "s is ::::" << QByteArray::number(s, 16);
+    s = qb.data()[8];
+    qDebug() << "s is ::::" << QByteArray::number(s, 16);
+    s = qb.data()[9];
+    qDebug() << "s is ::::" << QByteArray::number(s, 16);
+    s = qb.data()[10];
+    qDebug() << "s is ::::" << QByteArray::number(s, 16);
+    s = qb.data()[11];
+    qDebug() << "s is ::::" << QByteArray::number(s, 16);
+    s = qb.data()[12];
+    qDebug() << "s is ::::" << QByteArray::number(s, 16);
+    s = qb.data()[13];
+    qDebug() << "s is ::::" << QByteArray::number(s, 16);
+    s = qb.data()[14];
+    qDebug() << "s is ::::" << QByteArray::number(s, 16);
+    s = qb.data()[15];
+    qDebug() << "s is ::::" << QByteArray::number(s, 16);
 
-    cout << qb.size() << endl;
-    qDebug() << "received：    " <<qb;
+
+    qDebug() << "size:    " <<qb.size() - 16;
+
+    qDebug() << "received:    " <<qb;
 
     QString str(qb.data());
     qDebug() << "SimpleTcpSocketClientDemo::readyRead " << str.toStdString().c_str();
