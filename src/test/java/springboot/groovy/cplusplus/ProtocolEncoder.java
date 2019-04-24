@@ -1,5 +1,9 @@
 package springboot.groovy.cplusplus;
 
+import java.io.ByteArrayOutputStream;
+import java.io.FileInputStream;
+import java.io.InputStream;
+
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
@@ -37,14 +41,25 @@ public class ProtocolEncoder extends MessageToByteEncoder<byte[]>{
 	protected void encode(ChannelHandlerContext ctx, byte[] msg, ByteBuf out) throws Exception {
 		String str = "   zhe shi yi ge ceshi.这是一个测试";
 		byte[] b = str.getBytes();
-		System.err.println("str 长度：" + b.length);
+		InputStream in = new FileInputStream("f://test.xlsx");
+//	    byte[] data = toByteArray(in);
+	    ByteArrayOutputStream o = new ByteArrayOutputStream();
+	    byte[] buffer = new byte[1024 * 4];
+	    int n = 0;
+	    while ((n = in.read(buffer)) != -1) {
+	        o.write(buffer, 0, n);
+	    }
+	    in.close();
+	    byte [] bbb = o.toByteArray();
+	    System.err.println("str 长度：" + bbb.length);
+		
 		out
-		.writeShort(0xbabe);
-//		.writeByte(0x0f)
-//        .writeByte(0x02)
-//        .writeLong(0x01)
-//        .writeInt(b.length)
-//        .writeBytes(b);
+		.writeShort(0xbabe)
+		.writeByte(0x0f)
+        .writeByte(0x02)
+        .writeLong(0x01)
+        .writeInt(bbb.length)
+        .writeBytes(bbb);
 		
 	}
 

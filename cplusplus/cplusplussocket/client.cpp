@@ -7,6 +7,8 @@
 #include <stdio.h>
 #include <bitset>
 #include <string.h>
+#include <qfile.h>
+#include <qdatastream.h>
 
 using namespace std;
 
@@ -62,8 +64,21 @@ void SimpleTcpSocketClientDemo::readyRead()
     int dec = hex.toHex().toInt(&ok, 16);
     qDebug() << "dec is :" << dec;
     hex = qb.mid(16, dec);
-    qDebug() << "body length:" << hex.size();
-    qDebug() << hex.data();
+
+    QFile file("F:/test.xls");
+    file.open(QIODevice::WriteOnly);
+    QDataStream out(&file);
+    out.setVersion(QDataStream::Qt_5_12);
+//    qDebug() << hex.data();
+    out.writeRawData(hex, dec);
+//    out << hex;
+//    file.write(hex, dec);
+
+//    file.write(hex.data());
+//    file.close();
+
+    qDebug() << "body hex length:" << hex.size();
+//    qDebug() << hex.data();
 }
 void SimpleTcpSocketClientDemo::sendData(){
     QString str = "asdasdasdasdas hello , im received your msg. and we are connected.";
