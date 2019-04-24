@@ -44,12 +44,7 @@ void SimpleTcpSocketClientDemo::readyRead()
 //    qb = m_pTcpSocket->read(4);
 //    qDebug() << qb.toHex();
 //    qb = m_pTcpSocket->readAll();
-    qDebug() << qb.data();
-
-    qDebug() << "size:    " <<qb.size() - 16;
-
-    int length = 2;
-    size_t t = sizeof (length);
+//    qDebug() << qb.data();
 
     QByteArray hex = qb.mid(0, 2);
     qDebug() << hex.toHex();
@@ -60,12 +55,15 @@ void SimpleTcpSocketClientDemo::readyRead()
     hex = qb.mid(4, 8);
     qDebug() << hex.toHex();
     hex = qb.mid(12, 4);
-    qDebug() << hex.toHex();
-    qDebug() << "received:    " <<qb.toHex();
+    qDebug() << hex.toHex().data();
 
-    QString str(qb.data());
-    qDebug() << "SimpleTcpSocketClientDemo::readyRead " << str.toStdString().c_str();
-    cout << qb.data() << endl;
+
+    bool ok;
+    int dec = hex.toHex().toInt(&ok, 16);
+    qDebug() << "dec is :" << dec;
+    hex = qb.mid(16, dec);
+    qDebug() << "body length:" << hex.size();
+    qDebug() << hex.data();
 }
 void SimpleTcpSocketClientDemo::sendData(){
     QString str = "asdasdasdasdas hello , im received your msg. and we are connected.";
