@@ -1,9 +1,18 @@
 package springboot.groovy.cplusplus;
 
+import java.io.ByteArrayOutputStream;
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.io.RandomAccessFile;
+
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
+import io.netty.channel.DefaultFileRegion;
+import io.netty.channel.FileRegion;
+import io.netty.handler.ssl.SslHandler;
+import io.netty.handler.stream.ChunkedFile;
 import io.netty.handler.timeout.IdleState;
 import io.netty.handler.timeout.IdleStateEvent;
 
@@ -13,16 +22,55 @@ public class CplusplusHandler extends ChannelInboundHandlerAdapter {
     
 	@Override
 	public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-		System.out.print("来了");
-        System.out.println("server channelRead.." + msg);
-        System.out.println(ctx.channel().remoteAddress() + "->Server :" + msg.toString());
+        System.out.println("server channelRead.." + ctx.channel().remoteAddress() + "->Server :" + msg.toString());
         ctx.writeAndFlush(changeSizeEndBytes(msg.toString().getBytes()));
-        
-//        byte[] bt = new byte[16];
-//        for(int i = 0; i < 16; i ++) {
-//        	bt[i] = (byte) i;
+//        RandomAccessFile raf = null;
+//        long length = -1;
+//        try {
+//            raf = new RandomAccessFile("f://1.mp3", "r");
+//            length = raf.length();
+//        } catch (Exception e) {
+//            ctx.writeAndFlush("ERR: " + e.getClass().getSimpleName() + ": " + e.getMessage() + '\n');
+//            return;
+//        } finally {
+//            if (length < 0 && raf != null) {
+//                raf.close();
+//            }
 //        }
-//        ctx.writeAndFlush(msg);
+//        System.err.println("file length :" + length );
+////        ctx.write("OK: " + raf.length() + '\n');
+//        if (ctx.pipeline().get(SslHandler.class) == null) {
+//            // SSL not enabled - can use zero-copy file transfer.
+//        	System.err.println("进来了");
+//            ctx.write(new DefaultFileRegion(raf.getChannel(), 0, length));
+//        } else {
+//            // SSL enabled - cannot use zero-copy file transfer.
+//            ctx.write(new ChunkedFile(raf));
+//        }
+//        ctx.writeAndFlush("\n");
+//        ctx.writeAndFlush("\n");
+        
+//        RandomAccessFile randomAccessFile = new RandomAccessFile("f://1.png", "r");
+//        long length = randomAccessFile.length();
+//        System.err.println("str 长度：" + length);
+//		FileRegion region = new DefaultFileRegion(randomAccessFile.getChannel(), 0, randomAccessFile.length());
+//		ctx.write(region);
+		// 写入换行符表示文件结束
+//		ctx.writeAndFlush(CR);
+//		randomAccessFile.close();
+        
+//        InputStream in = new FileInputStream("f://1.mp3");
+//	    ByteArrayOutputStream o = new ByteArrayOutputStream();
+//	    byte[] buffer = new byte[1024 * 4];
+//	    int n = 0;
+//	    while ((n = in.read(buffer)) != -1) {
+//	        o.write(buffer, 0, n);
+//	    }
+//	    in.close();
+//	    byte [] bbb = o.toByteArray();
+//	    System.err.println("str 长度：" + length);
+//	    ctx.writeAndFlush(bbb);
+//	    saveFile(bbb, "f://", "3.mp3");
 	}
 	@Override
 	public void channelReadComplete(ChannelHandlerContext ctx) throws Exception {

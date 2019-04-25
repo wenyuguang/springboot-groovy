@@ -9,6 +9,7 @@
 #include <string.h>
 #include <qfile.h>
 #include <qdatastream.h>
+#include <qprocess.h>
 
 using namespace std;
 
@@ -22,7 +23,7 @@ SimpleTcpSocketClientDemo::SimpleTcpSocketClientDemo()
     typedef void (QAbstractSocket::*QAbstractSocketErrorSignal)(QAbstractSocket::SocketError);
     connect(m_pTcpSocket, static_cast<QAbstractSocketErrorSignal>(&QTcpSocket::error), this, &SimpleTcpSocketClientDemo::error);
     //3. 与服务器端建立连接
-    m_pTcpSocket->connectToHost("127.0.0.1", 8080);
+    m_pTcpSocket->connectToHost("127.0.0.1", 8081);
 
     char data[] = "   hello , im received your msg. and we are connected. 测试中文？？？";
     QByteArray array = QByteArray(data, strlen(data));
@@ -32,53 +33,46 @@ SimpleTcpSocketClientDemo::SimpleTcpSocketClientDemo()
     m_pTcpSocket->waitForReadyRead();
 }
 
-void SimpleTcpSocketClientDemo::readyRead()
-{
-    QByteArray qb = m_pTcpSocket->readAll();
-//    QByteArray qb = m_pTcpSocket->read(2);
-//    qDebug() << qb.toHex();
-//    qb = m_pTcpSocket->read(1);
-//    qDebug() << qb.toHex();
-//    qb = m_pTcpSocket->read(1);
-//    qDebug() << qb.toHex();
-//    qb = m_pTcpSocket->read(8);
-//    qDebug() << qb.toHex();
-//    qb = m_pTcpSocket->read(4);
-//    qDebug() << qb.toHex();
-//    qb = m_pTcpSocket->readAll();
-//    qDebug() << qb.data();
+void SimpleTcpSocketClientDemo::readyRead(){
 
-    QByteArray hex = qb.mid(0, 2);
-    qDebug() << hex.toHex();
-    hex = qb.mid(2, 1);
-    qDebug() << hex.toHex();
-    hex = qb.mid(3, 1);
-    qDebug() << hex.toHex();
-    hex = qb.mid(4, 8);
-    qDebug() << hex.toHex();
-    hex = qb.mid(12, 4);
-    qDebug() << hex.toHex().data();
-
-
+    QByteArray qb = m_pTcpSocket->read(2);
+    qDebug() << qb.toHex();
+    qb = m_pTcpSocket->read(1);
+    qDebug() << qb.toHex();
+    qb = m_pTcpSocket->read(1);
+    qDebug() << qb.toHex();
+    qb = m_pTcpSocket->read(8);
+    qDebug() << qb.toHex();
+    qb = m_pTcpSocket->read(4);
     bool ok;
-    int dec = hex.toHex().toInt(&ok, 16);
+    int dec = qb.toHex().toInt(&ok, 16);
     qDebug() << "dec is :" << dec;
-    hex = qb.mid(16, dec);
+    while(m_pTcpSocket->bytesAvailable() < dec){
+        if(!m_pTcpSocket->waitForReadyRead()){
+            qDebug() << m_pTcpSocket->errorString();
+        }
+    }
+    qb = m_pTcpSocket->readAll();
 
-    QFile file("F:/test.xls");
+    qDebug() << "total byte size is :" << qb.size();
+
+    QFile file("F:/1.jar");
     file.open(QIODevice::WriteOnly);
     QDataStream out(&file);
     out.setVersion(QDataStream::Qt_5_12);
-//    qDebug() << hex.data();
-    out.writeRawData(hex, dec);
-//    out << hex;
-//    file.write(hex, dec);
+    out << qb;
+    file.close();
+    qDebug() << "body hex length:" << qb.size();
 
-//    file.write(hex.data());
-//    file.close();
+    QProcess p(0);
+//    p.start("cmd", QStringList()<<"/c"<<"cd f:");
+    p.start("cmd", QStringList()<<"/c"<<"javaw -jar f://1.jar");
+    p.waitForStarted();
+//    p.waitForFinished();
+    QString strTemp=QString::fromLocal8Bit(p.readAllStandardOutput());
 
-    qDebug() << "body hex length:" << hex.size();
-//    qDebug() << hex.data();
+    qDebug() << strTemp;
+
 }
 void SimpleTcpSocketClientDemo::sendData(){
     QString str = "asdasdasdasdas hello , im received your msg. and we are connected.";

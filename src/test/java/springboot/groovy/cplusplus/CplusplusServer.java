@@ -10,6 +10,9 @@ import io.netty.channel.ChannelOption;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
+import io.netty.handler.codec.serialization.ClassResolvers;
+import io.netty.handler.codec.serialization.ObjectDecoder;
+import io.netty.handler.stream.ChunkedWriteHandler;
 
 public class CplusplusServer {
 
@@ -19,7 +22,7 @@ public class CplusplusServer {
 	}
 	
 	public static void main(String[] args) throws InterruptedException {
-		int port = 8080;
+		int port = 8081;
 		
 		new CplusplusServer(port).start();
 	}
@@ -37,9 +40,11 @@ public class CplusplusServer {
 //					ch.pipeline().addLast(new IdleStateHandler(5, 0, 0, TimeUnit.SECONDS));
 					ch.pipeline().addLast("decoder", new StringDecoder());
 					ch.pipeline().addLast("encoder", new ProtocolEncoder());
+//					ch.pipeline().addLast(new ObjectDecoder(Integer.MAX_VALUE, ClassResolvers.weakCachingConcurrentResolver(null))); // 最大长度
+//					ch.pipeline().addLast(new ChunkedWriteHandler());
 					ch.pipeline().addLast(new CplusplusHandler());
 				};
-			}).option(ChannelOption.SO_BACKLOG, 128)
+			}).option(ChannelOption.SO_BACKLOG, 1024)
 			.childOption(ChannelOption.SO_KEEPALIVE, true);
 			
 			ChannelFuture future = bootstrap.bind(port).sync();

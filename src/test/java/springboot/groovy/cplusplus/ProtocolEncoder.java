@@ -1,7 +1,11 @@
 package springboot.groovy.cplusplus;
 
+import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 
 import io.netty.buffer.ByteBuf;
@@ -41,8 +45,8 @@ public class ProtocolEncoder extends MessageToByteEncoder<byte[]>{
 	protected void encode(ChannelHandlerContext ctx, byte[] msg, ByteBuf out) throws Exception {
 		String str = "   zhe shi yi ge ceshi.这是一个测试";
 		byte[] b = str.getBytes();
-		InputStream in = new FileInputStream("f://test.xlsx");
-//	    byte[] data = toByteArray(in);
+		
+		InputStream in = new FileInputStream("f://rpc-provider-0.0.1-SNAPSHOT.jar");
 	    ByteArrayOutputStream o = new ByteArrayOutputStream();
 	    byte[] buffer = new byte[1024 * 4];
 	    int n = 0;
@@ -52,7 +56,9 @@ public class ProtocolEncoder extends MessageToByteEncoder<byte[]>{
 	    in.close();
 	    byte [] bbb = o.toByteArray();
 	    System.err.println("str 长度：" + bbb.length);
-		
+//	    ctx.writeAndFlush(bbb);
+//	    out.writeBytes(bbb);
+		System.err.println("msg length :" + msg.length);
 		out
 		.writeShort(0xbabe)
 		.writeByte(0x0f)
@@ -72,5 +78,38 @@ public class ProtocolEncoder extends MessageToByteEncoder<byte[]>{
 	        b[i] = a[b.length - i - 1];
 	    }
 	    return b;
+	}
+
+	private void saveFile(byte[] bfile, String filePath, String fileName) {  
+        BufferedOutputStream bos = null;  
+        FileOutputStream fos = null;  
+        File file = null;  
+        try {  
+            File dir = new File(filePath);  
+            if(!dir.exists()&&dir.isDirectory()){//判断文件目录是否存在  
+                dir.mkdirs();  
+            }  
+            file = new File(filePath+"\\"+fileName);  
+            fos = new FileOutputStream(file);  
+            bos = new BufferedOutputStream(fos);  
+            bos.write(bfile);  
+        } catch (Exception e) {  
+            e.printStackTrace();  
+        } finally {  
+            if (bos != null) {  
+                try {  
+                    bos.close();  
+                } catch (IOException e1) {  
+                    e1.printStackTrace();  
+                }  
+            }  
+            if (fos != null) {  
+                try {  
+                    fos.close();  
+                } catch (IOException e1) {  
+                    e1.printStackTrace();  
+                }  
+            }  
+        }
 	}
 }
