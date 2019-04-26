@@ -22,9 +22,9 @@ public class RemoteBootComputer {
      * main方法，发送UDP广播，实现远程开机
      */
     public static void main(String[] args) {
-        String ip = "";//广播IP地址
-        String mac = "".replace("-", "");
-        int port = 9;//端口号
+        String ip = "";//主机ip地址
+        String mac = "".replace("-", "").replace(":", "");//主机mac地址
+        int port = 800;//端口号
         //魔术包数据 
         StringBuilder stringBuilber = new StringBuilder();
         for(int i = 0; i < 16; i ++) {
@@ -41,14 +41,6 @@ public class RemoteBootComputer {
             //2.获取广播socket
             MulticastSocket socket = new MulticastSocket(port);
             //3.封装数据包
-            /*public DatagramPacket(byte[] buf,int length
-             *      ,InetAddress address
-             *      ,int port)
-             * buf：缓存的命令
-             * length：每次发送的数据字节数，该值必须小于等于buf的大小
-             * address：广播地址
-             * port：广播端口
-            */
             DatagramPacket packet = new DatagramPacket(command, command.length, address, port);
             //4.发送数据
             socket.send(packet);
