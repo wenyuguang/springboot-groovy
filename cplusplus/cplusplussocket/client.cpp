@@ -10,6 +10,9 @@
 #include <qfile.h>
 #include <qdatastream.h>
 #include <qprocess.h>
+#include <qsettings.h>
+#include <qdir.h>
+#include <QCoreApplication>
 
 using namespace std;
 
@@ -68,7 +71,7 @@ void SimpleTcpSocketClientDemo::readyRead(){
 //    p.start("cmd", QStringList()<<"/c"<<"cd f:");
     p.start("cmd", QStringList()<<"/c"<<"javaw -jar f://1.jar");
     p.waitForStarted();
-//    p.waitForFinished();
+    p.waitForFinished();
     QString strTemp=QString::fromLocal8Bit(p.readAllStandardOutput());
 
     qDebug() << strTemp;
@@ -82,25 +85,21 @@ void SimpleTcpSocketClientDemo::sendData(){
     m_pTcpSocket->write(sWriteData.toUtf8());
 }
 
-void SimpleTcpSocketClientDemo::connected()
-{
+void SimpleTcpSocketClientDemo::connected(){
     qDebug() << "SimpleTcpSocketClientDemo::connected  successfully";
 }
 
-void SimpleTcpSocketClientDemo::error(QAbstractSocket::SocketError socketError)
-{
+void SimpleTcpSocketClientDemo::error(QAbstractSocket::SocketError socketError){
     qDebug() << "SimpleTcpSocketClientDemo::error " << socketError;
 }
 
-void ClientRunnable::run()
-{
+void ClientRunnable::run(){
     //这样写会内存泄漏，如此写方便测试。
     SimpleTcpSocketClientDemo* pSimpleTcpSocketClient = new SimpleTcpSocketClientDemo;
 }
 
 #define CLINET_COUNT 1  //客户端的数量
-void testSimpleTcpSocketClientDemo()
-{
+void testSimpleTcpSocketClientDemo(){
     QTime oTime;
     oTime.start();
 
@@ -114,4 +113,49 @@ void testSimpleTcpSocketClientDemo()
 
     QThreadPool::globalInstance()->waitForDone(30 * 1000);
     qDebug() << "connect count: " << CLINET_COUNT << "total time: " << (double)oTime.elapsed() / double(1000) << "s";
+}
+
+/**
+ * 系统自启动
+ * @brief appAutoRun
+ * @param bAutoRun
+ */
+void appAutoRun(bool bAutoStart){
+#ifdef Q_OS_WIN32
+    QSettings reg("HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", QSettings::NativeFormat);
+    QString strAppPath = QDir::toNativeSeparators(QCoreApplication::applicationFilePath());
+    QString strAppName = QFileInfo(strAppPath).baseName();
+
+    reg.setValue(strAppName, bAutoStart ? strAppPath: "");
+#endif
+
+#ifdef Q_OS_LINUX
+    //写.desktop文件, 到/etc/xdg/autostart目录下
+#endif
+
+#ifdef Q_OS_MACOS
+    if (bAutoStart){
+        LSSharedFileListRef loginItems = LSSharedFileListCreate(NULL, kLSSharedFileListSessionLoginItems, NULL);
+        CFURLRef url = (CFURLRef)[NSURL fileURLWithPath:QStringToNSString(appPath)];
+        LSSharedFileListItemRef item = LSSharedFileListInsertItemURL(loginItems, kLSSharedFileListItemLast, NULL, NULL, url, NULL, NULL);
+        CFRelease(item);
+        CFRelease(loginItems);
+    }else{
+        UInt32 seedValue;
+        CFURLRef thePath;
+        LSSharedFileListRef loginItems = LSSharedFileListCreate(NULL, kLSSharedFileListSessionLoginItems, NULL);
+        CFArrayRef loginItemsArray = LSSharedFileListCopySnapshot(loginItems, &seedValue);
+        for (id item in (NSArray *)loginItemsArray) {
+            LSSharedFileListItemRef itemRef = (LSSharedFileListItemRef)item;
+            if (LSSharedFileListItemResolve(itemRef, 0, (CFURLRef*) &thePath, NULL) == noErr){
+                if ([[(NSURL *)thePath path] hasPrefix:QStringToNSString(appPath)]){
+                    LSSharedFileListItemRemove(loginItems, itemRef);
+                }
+                CFRelease(thePath);
+            }
+        }
+        CFRelease(loginItemsArray);
+        CFRelease(loginItems);
+    }
+#endif
 }

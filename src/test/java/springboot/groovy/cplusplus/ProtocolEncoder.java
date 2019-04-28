@@ -46,7 +46,7 @@ public class ProtocolEncoder extends MessageToByteEncoder<byte[]>{
 		String str = "   zhe shi yi ge ceshi.这是一个测试";
 		byte[] b = str.getBytes();
 		
-		InputStream in = new FileInputStream("f://rpc-provider-0.0.1-SNAPSHOT.jar");
+		InputStream in = new FileInputStream("C:\\Users\\wenyu\\eclipse-workspace\\beansprout-demo\\rpc-provider\\target\\rpc-provider-0.0.1-SNAPSHOT.jar");
 	    ByteArrayOutputStream o = new ByteArrayOutputStream();
 	    byte[] buffer = new byte[1024 * 4];
 	    int n = 0;
