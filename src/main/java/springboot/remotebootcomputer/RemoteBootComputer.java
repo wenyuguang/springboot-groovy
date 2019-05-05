@@ -2,6 +2,7 @@ package springboot.remotebootcomputer;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
+import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.MulticastSocket;
 import java.net.UnknownHostException;
@@ -23,12 +24,12 @@ public class RemoteBootComputer {
      */
     public static void main(String[] args) {
         String ip = "";//主机ip地址
-        String mac = "".replace("-", "").replace(":", "");//主机mac地址
-        int port = 800;//端口号
+        String mac = "";//主机mac地址
+        int port = 9999;//端口号
         //魔术包数据 
         StringBuilder stringBuilber = new StringBuilder();
         for(int i = 0; i < 16; i ++) {
-        	stringBuilber.append(mac);
+        	stringBuilber.append(mac.replace("-", "").replace(":", ""));
         }
         String magicPacage = "0xFFFFFFFFFFFF" + stringBuilber.toString();
         //转换为2进制的魔术包数据
@@ -53,6 +54,10 @@ public class RemoteBootComputer {
             //获取socket失败时候抛出的异常
             e.printStackTrace();
         }
+        /**
+         * 发送udp数据包方式启动
+         */
+        System.err.println(wake(ip, mac, port));
     }
 
     /**
@@ -85,5 +90,48 @@ public class RemoteBootComputer {
      */
     private static byte hexToDec(char c){
         return (byte)"0123456789ABCDEF".indexOf(c);
+    }
+    /**
+     * 外网发送udp魔术包远程启动
+     * @param host
+     * @param mac
+     * @param port
+     * @return
+     */
+    private static String wake(String host, String mac, int port) {
+        try {
+            byte[] macBytes = getMacBytes(mac);//转成字节类型
+            byte[] bytes = new byte[6 + 16 * macBytes.length];
+            for (int i = 0; i < 6; i++) {
+                bytes[i] = (byte) 0xff;
+            }
+            for (int i = 6; i < bytes.length; i += macBytes.length) {
+                System.arraycopy(macBytes, 0, bytes, i, macBytes.length); //放入16个MAC地址
+            }
+            InetAddress address = InetAddress.getByName(host);
+            DatagramPacket packet = new DatagramPacket(bytes, bytes.length, address, port);
+            DatagramSocket socket = new DatagramSocket();
+            socket.send(packet);
+            socket.close();
+            return "wol_package_sent_success";
+        } catch (Exception e) {
+            return "wol_package_sent_fail";
+        }
+    }
+    
+    private static byte[] getMacBytes(String mac) throws IllegalArgumentException {
+        byte[] bytes = new byte[6];
+        String[] hex = mac.split("(\\:|\\-)");
+        if (hex.length != 6) {
+            throw new IllegalArgumentException("Invalid MAC address.");
+        }
+        try {
+            for (int i = 0; i < 6; i++) {
+                bytes[i] = (byte) Integer.parseInt(hex[i], 16);
+            }
+        } catch (NumberFormatException e) {
+            throw new IllegalArgumentException("Invalid hex digit in MAC address.");
+        }
+        return bytes;
     }
 }
