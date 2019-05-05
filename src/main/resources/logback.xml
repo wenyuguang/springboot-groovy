@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "  http://www.w3.org/2002/xmlspec/dtd/2.10/xmlspec.dtd">
+<configuration>
+	<appender name="stdout" class="ch.qos.logback.core.ConsoleAppender">
+		<layout class="ch.qos.logback.classic.PatternLayout">
+			<pattern>%-20(%d{HH:mm:ss.SSS} [%thread]) %-5level %logger{80} - %msg%n</pattern>
+		</layout>
+	</appender>
+ 
+	<!--
+		<property name="log.base" value="../logs/" /> <appender name="file"
+		class="ch.qos.logback.core.rolling.RollingFileAppender"> <file>${log.base}.log</file> <rollingPolicy
+		class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+		<fileNamePattern>${log.base}.%d{yyyy-MM-dd}.log.zip</fileNamePattern> </rollingPolicy> <layout
+		class="ch.qos.logback.classic.PatternLayout"> <pattern>%-20(%d{HH:mm:ss.SSS} [%thread]) %-5level %logger{80} -
+		%msg%n</pattern> </layout> </appender>
+	<appender name="db-classic-oracle" class="ch.qos.logback.classic.db.DBAppender">
+		<connectionSource class="ch.qos.logback.core.db.DataSourceConnectionSource">
+			<dataSource class="org.apache.commons.dbcp.BasicDataSource">
+				<driverClassName>oracle.jdbc.driver.OracleDriver</driverClassName>
+				<url>jdbc:oracle:thin:@192.168.3.250:1521:devdb</url>
+				<user>logback</user>
+				<password>logback</password>
+			</dataSource>
+		</connectionSource>
+	</appender>
+	<appender name="db-classic-mysql" class="ch.qos.logback.classic.db.DBAppender">
+		<connectionSource class="ch.qos.logback.core.db.DriverManagerConnectionSource">
+			<driverClass>com.mysql.jdbc.Driver</driverClass>
+			<url>jdbc:mysql://localhost:3306/logbackdb</url>
+			<user>root</user>
+			<password>qqqqqq</password>
+		</connectionSource>
+	</appender>
+	<appender name="db-access" class="ch.qos.logback.access.db.DBAppender">
+		<connectionSource class="ch.qos.logback.core.db.DriverManagerConnectionSource">
+			<driverClass>com.mysql.jdbc.Driver</driverClass>
+			<url>jdbc:mysql://localhost:3306/logbackdb</url>
+			<user>root</user>
+			<password>qqqqqq</password>
+		</connectionSource>
+		<insertHeaders>true</insertHeaders>
+	</appender>
+	-->
+	<appender name="db-classic-mysql-pool" class="ch.qos.logback.classic.db.DBAppender">
+		<connectionSource class="ch.qos.logback.core.db.DataSourceConnectionSource">
+			<dataSource class="org.apache.commons.dbcp.BasicDataSource">
+				<driverClassName>com.mysql.jdbc.Driver</driverClassName>
+				<url>jdbc:mysql://localhost:3306/log?useSSL=false</url>
+				<username>root</username>
+				<password>wenyuguang</password>
+			</dataSource>
+		</connectionSource>
+	</appender>
+	
+	<!-- <appender name="db-classic-oracle-pool" class="ch.qos.logback.classic.db.DBAppender">
+		<connectionSource class="ch.qos.logback.core.db.DataSourceConnectionSource">
+			<dataSource class="org.apache.commons.dbcp.BasicDataSource">
+				<driverClassName>oracle.jdbc.driver.OracleDriver</driverClassName>
+				<url>jdbc:oracle:thin:@192.168.3.250:1521:devdb</url>
+				<username>logback</username>
+				<password>logback</password>
+			</dataSource>
+		</connectionSource>
+	</appender> -->
+	
+	<root level="WARN">
+		<appender-ref ref="stdout" />
+		<appender-ref ref="db-classic-mysql-pool" />
+	</root>
+</configuration>
